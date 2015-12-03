@@ -9,9 +9,6 @@ import com.brentaureli.mariobros.MarioBros;
 import com.brentaureli.mariobros.Screens.PlayScreen;
 import com.brentaureli.mariobros.Sprites.Mario;
 
-/**
- * Created by brentaureli on 9/24/15.
- */
 public abstract class Item extends Sprite {
     protected PlayScreen screen;
     protected World world;

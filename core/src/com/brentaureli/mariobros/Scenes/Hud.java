@@ -1,6 +1,5 @@
 package com.brentaureli.mariobros.Scenes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,9 +12,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.brentaureli.mariobros.MarioBros;
 
-/**
- * Created by brentaureli on 8/17/15.
- */
 public class Hud implements Disposable{
 
     //Scene2D.ui Stage and its own Viewport for HUD
@@ -89,6 +85,10 @@ public class Hud implements Disposable{
             countdownLabel.setText(String.format("%03d", worldTimer));
             timeCount = 0;
         }
+    }
+
+    public int getWorldTimer(){
+        return worldTimer;
     }
 
     public static void addScore(int value){

@@ -1,5 +1,6 @@
 package com.brentaureli.mariobros.Sprites.TileObjects;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -29,10 +30,12 @@ public abstract class InteractiveTileObject {
     protected Body body;
     protected PlayScreen screen;
     protected MapObject object;
+    protected AssetManager manager;
 
     protected Fixture fixture;
 
     public InteractiveTileObject(PlayScreen screen, MapObject object){
+        this.manager = screen.getAssetManager();
         this.object = object;
         this.screen = screen;
         this.world = screen.getWorld();

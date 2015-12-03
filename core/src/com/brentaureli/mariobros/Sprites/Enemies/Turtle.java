@@ -11,10 +11,8 @@ import com.badlogic.gdx.utils.Array;
 import com.brentaureli.mariobros.MarioBros;
 import com.brentaureli.mariobros.Screens.PlayScreen;
 import com.brentaureli.mariobros.Sprites.Mario;
+import com.brentaureli.mariobros.Tools.MarioAssetManager;
 
-/**
- * Created by brentaureli on 10/10/15.
- */
 public class Turtle extends Enemy {
     public static final int KICK_LEFT = -2;
     public static final int KICK_RIGHT = 2;
@@ -137,10 +135,12 @@ public class Turtle extends Enemy {
     @Override
     public void hitByEnemy(Enemy enemy) {
         reverseVelocity(true, false);
+//        manager.playMusic(MarioAssetManager.BUMP_SOUND); Exception in thread "LWJGL Application" com.badlogic.gdx.utils.GdxRuntimeException: Asset not loaded: audio/music/bump.wav
     }
 
     public void kick(int direction){
         velocity.x = direction;
         currentState = State.MOVING_SHELL;
+        manager.playSound(MarioAssetManager.TURTLE_KICK_SOUND);
     }
 }

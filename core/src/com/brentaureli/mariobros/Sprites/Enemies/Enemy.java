@@ -6,17 +6,17 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.brentaureli.mariobros.Screens.PlayScreen;
 import com.brentaureli.mariobros.Sprites.Mario;
+import com.brentaureli.mariobros.Tools.MarioAssetManager;
 
-/**
- * Created by brentaureli on 9/14/15.
- */
 public abstract class Enemy extends Sprite {
     protected World world;
     protected PlayScreen screen;
     public Body b2body;
     public Vector2 velocity;
+    protected MarioAssetManager manager;
 
     public Enemy(PlayScreen screen, float x, float y){
+        this.manager = screen.getAssetManager();
         this.world = screen.getWorld();
         this.screen = screen;
         setPosition(x, y);

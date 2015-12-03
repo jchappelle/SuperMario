@@ -1,12 +1,9 @@
 package com.brentaureli.mariobros;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.brentaureli.mariobros.Screens.PlayScreen;
+import com.brentaureli.mariobros.Tools.MarioAssetManager;
 
 public class MarioBros extends Game {
 	//Virtual Screen size and Box2D Scale(Pixels Per Meter)
@@ -30,30 +27,19 @@ public class MarioBros extends Game {
 
 	public SpriteBatch batch;
 
-	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
-	Instead you may want to pass around Assetmanager to those the classes that need it.
-	We will use it in the static context to save time for now. */
-	public static AssetManager manager;
+	private MarioAssetManager manager;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		manager = new AssetManager();
-		manager.load("audio/music/mario_music.ogg", Music.class);
-		manager.load("audio/sounds/coin.wav", Sound.class);
-		manager.load("audio/sounds/bump.wav", Sound.class);
-		manager.load("audio/sounds/breakblock.wav", Sound.class);
-		manager.load("audio/sounds/powerup_spawn.wav", Sound.class);
-		manager.load("audio/sounds/powerup.wav", Sound.class);
-		manager.load("audio/sounds/powerdown.wav", Sound.class);
-		manager.load("audio/sounds/stomp.wav", Sound.class);
-		manager.load("audio/sounds/mariodie.wav", Sound.class);
-
-		manager.finishLoading();
+		manager = new MarioAssetManager();
 
 		setScreen(new PlayScreen(this));
 	}
 
+	public MarioAssetManager getAssetManager(){
+		return manager;
+	}
 
 	@Override
 	public void dispose() {

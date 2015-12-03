@@ -2,8 +2,7 @@ package com.brentaureli.mariobros.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -24,15 +23,12 @@ import com.brentaureli.mariobros.Sprites.Items.ItemDef;
 import com.brentaureli.mariobros.Sprites.Items.Mushroom;
 import com.brentaureli.mariobros.Sprites.Mario;
 import com.brentaureli.mariobros.Tools.B2WorldCreator;
+import com.brentaureli.mariobros.Tools.MarioAssetManager;
 import com.brentaureli.mariobros.Tools.WorldContactListener;
 
-import java.util.PriorityQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Created by brentaureli on 8/14/15.
- */
-public class PlayScreen implements Screen{
+public class PlayScreen extends ScreenAdapter{
     //Reference to our Game, used to set Screens
     private MarioBros game;
     private TextureAtlas atlas;
@@ -56,13 +52,14 @@ public class PlayScreen implements Screen{
     //sprites
     private Mario player;
 
-    private Music music;
-
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
+    private MarioAssetManager manager;
+    private boolean warningPlayed = false;
 
 
     public PlayScreen(MarioBros game){
+        this.manager = game.getAssetManager();
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
 
         this.game = game;
@@ -95,10 +92,7 @@ public class PlayScreen implements Screen{
 
         world.setContactListener(new WorldContactListener());
 
-        music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
-        music.setLooping(true);
-        music.setVolume(0.3f);
-        //music.play();
+        manager.playMusic(MarioAssetManager.MARIO_MUSIC);
 
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
@@ -121,12 +115,6 @@ public class PlayScreen implements Screen{
 
     public TextureAtlas getAtlas(){
         return atlas;
-    }
-
-    @Override
-    public void show() {
-
-
     }
 
     public void handleInput(float dt){
@@ -164,6 +152,12 @@ public class PlayScreen implements Screen{
             item.update(dt);
 
         hud.update(dt);
+        int worldTimer = hud.getWorldTimer();
+        if(worldTimer < 290 && !warningPlayed){
+            manager.playSound(MarioAssetManager.WARNING_SOUND);
+            manager.stopMusic(MarioAssetManager.MARIO_MUSIC);//TODO: Need to start the music back somehow after warning plays
+            warningPlayed = true;
+        }
 
         //attach our gamecam to our players.x coordinate
         if(player.currentState != Mario.State.DEAD) {
@@ -230,23 +224,13 @@ public class PlayScreen implements Screen{
     public TiledMap getMap(){
         return map;
     }
+
     public World getWorld(){
         return world;
     }
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
+    public MarioAssetManager getAssetManager(){
+        return manager;
     }
 
     @Override

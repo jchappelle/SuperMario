@@ -1,7 +1,5 @@
 package com.brentaureli.mariobros.Sprites;
 
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -18,12 +16,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.brentaureli.mariobros.MarioBros;
 import com.brentaureli.mariobros.Screens.PlayScreen;
+import com.brentaureli.mariobros.Sprites.Enemies.Enemy;
+import com.brentaureli.mariobros.Sprites.Enemies.Turtle;
 import com.brentaureli.mariobros.Sprites.Other.FireBall;
-import com.brentaureli.mariobros.Sprites.Enemies.*;
+import com.brentaureli.mariobros.Tools.MarioAssetManager;
 
-/**
- * Created by brentaureli on 8/27/15.
- */
 public class Mario extends Sprite {
     public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD };
     public State currentState;
@@ -51,9 +48,11 @@ public class Mario extends Sprite {
     private PlayScreen screen;
 
     private Array<FireBall> fireballs;
+    private MarioAssetManager manager;
 
     public Mario(PlayScreen screen){
         //initialize default values
+        this.manager = screen.getAssetManager();
         this.screen = screen;
         this.world = screen.getWorld();
         currentState = State.STANDING;
@@ -214,7 +213,7 @@ public class Mario extends Sprite {
             marioIsBig = true;
             timeToDefineBigMario = true;
             setBounds(getX(), getY(), getWidth(), getHeight() * 2);
-            MarioBros.manager.get("audio/sounds/powerup.wav", Sound.class).play();
+            manager.playSound(MarioAssetManager.POWERUP_SOUND);
         }
     }
 
@@ -222,8 +221,9 @@ public class Mario extends Sprite {
 
         if (!isDead()) {
 
-            MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
-            MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+            manager.stopMusic(MarioAssetManager.MARIO_MUSIC);
+            manager.playSound(MarioAssetManager.MARIO_DIE_SOUND);
+
             marioIsDead = true;
             Filter filter = new Filter();
             filter.maskBits = MarioBros.NOTHING_BIT;
@@ -252,6 +252,11 @@ public class Mario extends Sprite {
         if ( currentState != State.JUMPING ) {
             b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
             currentState = State.JUMPING;
+            String jumpSound = MarioAssetManager.MARIO_JUMP_SMALL_SOUND;
+            if(marioIsBig){
+                jumpSound = MarioAssetManager.MARIO_JUMP_SUPER_SOUND;
+            }
+            manager.playSound(jumpSound);
         }
     }
 
@@ -263,7 +268,7 @@ public class Mario extends Sprite {
                 marioIsBig = false;
                 timeToRedefineMario = true;
                 setBounds(getX(), getY(), getWidth(), getHeight() / 2);
-                MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+                manager.playSound(MarioAssetManager.POWERDOWN_SOUND);
             } else {
                 die();
             }
